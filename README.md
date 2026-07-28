@@ -4,7 +4,7 @@ Express authentication API for Health +. Supabase Auth securely stores credentia
 
 ## Setup
 
-1. Create a Supabase project and run [`supabase/schema.sql`](supabase/schema.sql) in its SQL Editor. If you previously ran the earlier version, run migrations `002`, `003`, and `004` in order.
+1. Create a Supabase project and run the complete [`supabase/setup.sql`](supabase/setup.sql) file in its SQL Editor. It creates the tables, RLS policies, and the Auth trigger that automatically creates each user's profile. It can also repair profiles missing from earlier test accounts. Use [`supabase/schema.sql`](supabase/schema.sql) only for a brand-new manual setup.
 2. In Supabase **Authentication → Providers → Email**, enable email/password and turn off **Confirm email**. This lets a newly registered user sign in immediately without email confirmation, and prevents signup from sending confirmation emails.
    If you keep email confirmation enabled, configure **Authentication → SMTP Settings** with a custom SMTP provider before testing at scale. Supabase's built-in email service is limited to two emails per hour across the project, so repeated signup attempts will return an email-rate-limit error.
 3. Copy `.env.example` to `.env`, then add your Supabase project URL and anon key.

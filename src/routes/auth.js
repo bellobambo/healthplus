@@ -55,6 +55,21 @@ router.post('/signup', async (req, res, next) => {
       });
     }
 
+    // Detect a missing database trigger at the point of signup. Without this
+    // check Auth would create a user successfully, but their first login would
+    // fail later because the required public.profiles row does not exist.
+    const { data: profile, error: profileError } = await supabaseForToken(data.session.access_token)
+      .from('profiles')
+      .select('id')
+      .eq('id', data.user.id)
+      .maybeSingle();
+    if (profileError || !profile) {
+      return res.status(503).json({
+        error: 'Account setup is incomplete.',
+        message: 'Your Auth account was created, but its application profile is missing. Run supabase/setup.sql in the Supabase SQL Editor, then sign in again.'
+      });
+    }
+
     return res.status(201).json({
       message: 'Account created and signed in successfully.',
       user: data.user ? { id: data.user.id, email: data.user.email, role } : null,
