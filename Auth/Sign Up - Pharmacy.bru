@@ -1,0 +1,29 @@
+meta {
+  name: Sign Up - Pharmacy
+  type: http
+  seq: 2
+}
+
+post {
+  url: {{baseUrl}}/api/auth/signup
+  body: json
+}
+
+headers {
+  Content-Type: application/json
+}
+
+body:json {
+  {
+    "email": "citycare@example.com",
+    "password": "secure-password",
+    "fullName": "Ada Nwosu",
+    "phone": "+2348012345678",
+    "role": "PHARMACY",
+    "pharmacyName": "CityCare Pharmacy"
+  }
+}
+
+auth {
+  mode: none
+}

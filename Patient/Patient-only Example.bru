@@ -1,0 +1,14 @@
+meta {
+  name: Patient-only Example
+  type: http
+  seq: 1
+}
+
+get {
+  url: {{baseUrl}}/api/patient
+  body: none
+}
+
+headers {
+  Authorization: Bearer {{accessToken}}
+}
