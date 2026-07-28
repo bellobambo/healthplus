@@ -37,7 +37,17 @@ router.post('/signup', async (req, res, next) => {
         }
       }
     });
-    if (error) return res.status(400).json({ error: 'Account creation failed.', message: error.message });
+    if (error) {
+      // Supabase's built-in email provider allows very few email sends. Do not
+      // present that temporary upstream throttle as a malformed signup request.
+      if (error.status === 429 || /email rate limit exceeded/i.test(error.message)) {
+        return res.status(429).json({
+          error: 'Signup email limit reached.',
+          message: 'Too many signup or authentication emails have been sent. Wait before trying again, or configure custom SMTP in Supabase for a higher sending limit.'
+        });
+      }
+      return res.status(400).json({ error: 'Account creation failed.', message: error.message });
+    }
     if (!data.session) {
       return res.status(409).json({
         error: 'Automatic sign-in is not enabled.',
