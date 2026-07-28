@@ -31,6 +31,7 @@
     "/api/auth/signup": {
       "post": {
         "summary": "Create a patient or pharmacy account",
+        "description": "To create a patient, use `role: PATIENT`. To create a pharmacy, use `role: PHARMACY` and include `pharmacyName`, for example: `{ \"email\": \"citycare@example.com\", \"password\": \"secure-password\", \"fullName\": \"Ada Nwosu\", \"role\": \"PHARMACY\", \"pharmacyName\": \"CityCare Pharmacy\" }`.",
         "requestBody": {
           "required": true,
           "content": {

@@ -3,13 +3,13 @@ const { supabase, supabaseForToken } = require('../lib/supabase');
 async function requireAuth(req, res, next) {
   const authorization = req.headers.authorization;
   if (!authorization?.startsWith('Bearer ')) {
-    return res.status(401).json({ error: 'A Bearer access token is required.' });
+    return res.status(401).json({ error: 'A Bearer access token is required.', message: 'Sign in first, then send your access token as a Bearer token.' });
   }
 
   const token = authorization.slice('Bearer '.length);
   const { data, error } = await supabase.auth.getUser(token);
   if (error || !data.user) {
-    return res.status(401).json({ error: 'Your session is invalid or has expired.' });
+    return res.status(401).json({ error: 'Your session is invalid or has expired.', message: 'Please sign in again to get a new access token.' });
   }
 
   const { data: profile, error: profileError } = await supabaseForToken(token)
@@ -19,7 +19,7 @@ async function requireAuth(req, res, next) {
     .single();
 
   if (profileError || !profile) {
-    return res.status(403).json({ error: 'Account profile is unavailable.' });
+    return res.status(403).json({ error: 'Account profile is unavailable.', message: 'Your account profile could not be loaded. Please contact support.' });
   }
 
   req.user = data.user;
@@ -39,7 +39,7 @@ async function requireAuth(req, res, next) {
 function requireRole(...roles) {
   return (req, res, next) => {
     if (!req.profile || !roles.includes(req.profile.role)) {
-      return res.status(403).json({ error: 'You do not have access to this resource.' });
+      return res.status(403).json({ error: 'You do not have access to this resource.', message: `This endpoint is available only to: ${roles.join(', ')}.` });
     }
     next();
   };

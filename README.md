@@ -5,7 +5,7 @@ Express authentication API for Health +. Supabase Auth securely stores credentia
 ## Setup
 
 1. Create a Supabase project and run [`supabase/schema.sql`](supabase/schema.sql) in its SQL Editor. If you previously ran the earlier version, run migrations `002`, `003`, and `004` in order.
-2. In Supabase **Authentication → Providers → Email**, enable email/password. For a quicker local demo, turn off **Confirm email**; otherwise users must verify their email before logging in.
+2. In Supabase **Authentication → Providers → Email**, enable email/password and turn off **Confirm email**. This lets a newly registered user sign in immediately without email confirmation.
 3. Copy `.env.example` to `.env`, then add your Supabase project URL and anon key.
 4. Install and run:
 
