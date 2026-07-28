@@ -13,6 +13,19 @@ app.use(cors());
 app.use(express.json({ limit: '1mb' }));
 app.use(morgan(process.env.NODE_ENV === 'production' ? 'combined' : 'dev'));
 
+app.get('/', (_req, res) => res.json({
+  name: 'Health + API',
+  tagline: 'Your pharmacy, delivered.',
+  description: 'Health + helps patients find and order medication from pharmacies, while giving pharmacies a simple way to manage their accounts and orders.',
+  status: 'online',
+  endpoints: {
+    health: '/health',
+    signup: '/api/auth/signup',
+    login: '/api/auth/login',
+    currentUser: '/api/auth/me'
+  }
+}));
+
 app.get('/health', (_req, res) => res.json({ status: 'ok' }));
 app.use('/api/auth', authRoutes);
 app.use('/api', protectedRoutes);
