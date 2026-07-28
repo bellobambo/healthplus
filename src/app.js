@@ -7,7 +7,9 @@ const protectedRoutes = require('./routes/protected');
 
 const app = express();
 app.use(helmet());
-app.use(cors({ origin: process.env.CLIENT_ORIGIN?.split(',') || true }));
+// Open CORS for the MVP so any frontend client can call the API.
+// Restrict this to the deployed frontend domain before production launch.
+app.use(cors());
 app.use(express.json({ limit: '1mb' }));
 app.use(morgan(process.env.NODE_ENV === 'production' ? 'combined' : 'dev'));
 
