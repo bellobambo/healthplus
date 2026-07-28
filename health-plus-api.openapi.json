@@ -1,0 +1,137 @@
+{
+  "openapi": "3.0.3",
+  "info": {
+    "title": "Health + API",
+    "version": "1.0.0",
+    "description": "Authentication and role-access API for Health + — Your pharmacy, delivered."
+  },
+  "servers": [
+    {
+      "url": "https://healthplus-y18z.onrender.com",
+      "description": "Render deployment"
+    },
+    {
+      "url": "http://localhost:5000",
+      "description": "Local development"
+    }
+  ],
+  "paths": {
+    "/": {
+      "get": {
+        "summary": "Get API information",
+        "responses": { "200": { "description": "API information" } }
+      }
+    },
+    "/health": {
+      "get": {
+        "summary": "Health check",
+        "responses": { "200": { "description": "API is online" } }
+      }
+    },
+    "/api/auth/signup": {
+      "post": {
+        "summary": "Create a patient or pharmacy account",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": { "$ref": "#/components/schemas/SignUpRequest" },
+              "examples": {
+                "patient": {
+                  "value": {
+                    "email": "chidi@example.com",
+                    "password": "secure-password",
+                    "fullName": "Chidi Okafor",
+                    "phone": "+2348012345678",
+                    "role": "PATIENT"
+                  }
+                },
+                "pharmacy": {
+                  "value": {
+                    "email": "citycare@example.com",
+                    "password": "secure-password",
+                    "fullName": "Ada Nwosu",
+                    "phone": "+2348012345678",
+                    "role": "PHARMACY",
+                    "pharmacyName": "CityCare Pharmacy"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": { "201": { "description": "Account created" }, "400": { "description": "Invalid registration data" } }
+      }
+    },
+    "/api/auth/login": {
+      "post": {
+        "summary": "Sign in",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": { "$ref": "#/components/schemas/LoginRequest" },
+              "example": { "email": "chidi@example.com", "password": "secure-password" }
+            }
+          }
+        },
+        "responses": { "200": { "description": "User and session tokens returned" }, "401": { "description": "Invalid credentials" } }
+      }
+    },
+    "/api/auth/logout": {
+      "post": {
+        "summary": "Sign out",
+        "security": [{ "bearerAuth": [] }],
+        "responses": { "204": { "description": "Signed out" }, "401": { "description": "Missing or invalid token" } }
+      }
+    },
+    "/api/auth/me": {
+      "get": {
+        "summary": "Get the current user",
+        "security": [{ "bearerAuth": [] }],
+        "responses": { "200": { "description": "Current user profile" }, "401": { "description": "Missing or invalid token" } }
+      }
+    },
+    "/api/patient": {
+      "get": {
+        "summary": "Patient-only example route",
+        "security": [{ "bearerAuth": [] }],
+        "responses": { "200": { "description": "Patient access granted" }, "403": { "description": "Pharmacy users are not allowed" } }
+      }
+    },
+    "/api/pharmacy": {
+      "get": {
+        "summary": "Pharmacy-only example route",
+        "security": [{ "bearerAuth": [] }],
+        "responses": { "200": { "description": "Pharmacy access granted" }, "403": { "description": "Patient users are not allowed" } }
+      }
+    }
+  },
+  "components": {
+    "securitySchemes": {
+      "bearerAuth": { "type": "http", "scheme": "bearer", "bearerFormat": "JWT" }
+    },
+    "schemas": {
+      "LoginRequest": {
+        "type": "object",
+        "required": ["email", "password"],
+        "properties": {
+          "email": { "type": "string", "format": "email" },
+          "password": { "type": "string", "minLength": 8 }
+        }
+      },
+      "SignUpRequest": {
+        "type": "object",
+        "required": ["email", "password", "fullName", "role"],
+        "properties": {
+          "email": { "type": "string", "format": "email" },
+          "password": { "type": "string", "minLength": 8 },
+          "fullName": { "type": "string" },
+          "phone": { "type": "string" },
+          "role": { "type": "string", "enum": ["PATIENT", "PHARMACY"] },
+          "pharmacyName": { "type": "string", "description": "Required only when role is PHARMACY." }
+        }
+      }
+    }
+  }
+}

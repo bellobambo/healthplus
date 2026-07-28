@@ -20,6 +20,8 @@ The API runs at `http://localhost:5000` by default.
 
 This repository is also a ready-to-import [Bruno](https://www.usebruno.com/) collection. In Bruno, select **Open Collection** and choose this project folder. Select the **Local** environment, run **Login** to save its returned token automatically, then run protected requests.
 
+For Bruno's **Import Collection** screen, select [`health-plus-api.openapi.json`](health-plus-api.openapi.json). It is a single OpenAPI JSON export containing every endpoint.
+
 ## Endpoints
 
 | Method | Endpoint | Purpose |
